@@ -39,10 +39,22 @@ const uploadToSupabase = async(articles) => {
     }
 }
 
-const main = async() => {
-    const articles = await fetchNews()
+const fetchFromSupabases = async() => {
+    try {
+        const { data, error } = await supabase
+            .from('News')
+            .select('*');
 
-    console.log("Length:", articles.length);
+            if (error) throw error;
+            console.log('Successfully fetched data from Supabase:', data);
+    } catch (error) {
+        console.error('Error fetching data from Supabase:', error);
+    }
+}
+
+const main = async() => {
+    // const articles = await fetchNews();
+    const articles = await fetchFromSupabases();
 
     if (articles.length > 0) {
         await uploadToSupabase(articles);
